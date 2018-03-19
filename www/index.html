@@ -61,14 +61,14 @@
             <div class="col-md-12">
                 <h4 id="weather-info" class="text-center">
                     
-                </h2>
+                </h4>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <h4 class="text-center">
                     Developed by <a href="https://github.com/isaacYAGI" target="_blank">IsaacYAGI</a> 
-                </h2>
+                </h4>
             </div>
         </div>
     </div>
@@ -88,22 +88,37 @@
                         var lon = position.coords.longitude;
                         var lat = position.coords.latitude;
                         //console.log("Success position" + JSON.stringify(lon) + "+" + JSON.stringify(lat));
-                        
+                        $.get( "https://fcc-weather-api.glitch.me/api/current", { "lat": lat, "lon": lon }, function(data){
+                            console.log(JSON.stringify(data));
+                            var lugar = data.name;
+                            var pais = data.sys.country;
+                            var temperatura = data.main.temp;
+                            var estado_clima = data.weather[0].description;
+                            var img_clima = data.weather[0].icon;
+                            $("#weather-info").append("<h4>" +  lugar + ", " + pais + "<br>");
+                            $("#weather-info").append(temperatura + "C " + "<br>");
+                            $("#weather-info").append(estado_clima + "<br>");
+                            $("#weather-info").append("<img src= \""+img_clima+"\" />");
+                            $("#weather-info").append("</h4>");  
+                        })
+                        .fail(function(error){
+                            console.log("Servicio no respondio.");
+                        });
                     }, function(positionError){
                         //error
                         console.log("Error position" + JSON.stringify(positionError));
                         switch (positionError.code){
                             case positionError.PERMISSION_DENIED:
-                                $("#weather-info").append("No se ha permitido el acceso a la posición del usuario.");
+                                $("#weather-info").append("<h4>No se ha permitido el acceso a la posición del usuario.</h4>");
                             break;
                             case positionError.POSITION_UNAVAILABLE:
-                                $("#weather-info").append("No se ha podido acceder a la información de su posición.");
+                                $("#weather-info").append("<h4>No se ha podido acceder a la información de su posición.</h4>");
                             break;
                             case positionError.TIMEOUT:
-                                $("#weather-info").append("El servicio ha tardado demasiado tiempo en responder.");
+                                $("#weather-info").append("<h4>El servicio ha tardado demasiado tiempo en responder.</h4>");
                             break;
                             default:
-                                $("#weather-info").append("Error desconocido.");
+                                $("#weather-info").append("<h4>Error desconocido.</h4>");
                         }
 
                     });
