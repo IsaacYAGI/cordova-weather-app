@@ -27,7 +27,7 @@
                 </h4>
                 <p class="text-center">
                     <button id="change-measure" class="btn btn-primary text-center" disabled>Change measure</button>
-                    <button id="reload-position" class="btn btn-primary text-center" disabled>Obtener posicion</button>
+                    <button id="reload-position" class="btn btn-primary text-center" disabled>Update position</button>
                 </p>
             </div>
         </div>
@@ -57,52 +57,6 @@
                         $("#weather-info").text("Loading...")
                         console.log("YAGI..." + "Si tiene geolocalizacion");
                         navigator.geolocation.getCurrentPosition(onSuccessGetLocation,onErrorGetLocation,localizacionConfigObj);
-                        //navigator.geolocation.getCurrentPosition(onSuccessGetLocation);
-                        /*
-                        navigator.geolocation.getCurrentPosition(function(position){
-                            //success 
-                            console.log("YAGI..." + "Success position" + JSON.stringify(position.coords));
-                            var lon = position.coords.longitude;
-                            var lat = position.coords.latitude;
-                            //Se invoca al servicio
-                            $.get( "https://fcc-weather-api.glitch.me/api/current", { "lat": lat, "lon": lon }, function(data){
-                                console.log("YAGI..." + JSON.stringify(data));
-                                alert("YAGI..." + JSON.stringify(data));
-                                var lugar = data.name;
-                                var pais = data.sys.country;
-                                var temperatura = data.main.temp;
-                                var estado_clima = data.weather[0].description;
-                                var img_clima = data.weather[0].icon;
-                                $("#weather-info").append(lugar + ", " + pais + "<br>");
-                                $("#weather-info").append("<span id=\"temperature\">" + temperatura + "</span> <span id=\"measure\"> C </span> " + "<br>");
-                                $("#weather-info").append(estado_clima + "<br>");
-                                $("#weather-info").append("<img src= \""+img_clima+"\" />");
-                                $("#weather-info").append("<br>");
-                                $('#change-measure').attr("disabled", false);
-                            })
-                            .fail(function(error){
-                                console.log("YAGI..." + "Servicio no respondio.");
-                                console.log("YAGI..." + "No funciona el servicio");
-                            });
-                        }, function(positionError){
-                            //error
-                            console.log("YAGI..." + "Error position" + JSON.stringify(positionError));
-                            switch (positionError.code){
-                                case positionError.PERMISSION_DENIED:
-                                    $("#weather-info").append("<h4>No se ha permitido el acceso a la posición del usuario.</h4>");
-                                break;
-                                case positionError.POSITION_UNAVAILABLE:
-                                    $("#weather-info").append("<h4>No se ha podido acceder a la información de su posición.</h4>");
-                                break;
-                                case positionError.TIMEOUT:
-                                    $("#weather-info").append("<h4>El servicio ha tardado demasiado tiempo en responder.</h4>");
-                                break;
-                                default:
-                                    $("#weather-info").append("<h4>Error desconocido.</h4>");
-                            }
-    
-                        },{enableHighAccuracy: true});
-                        */
                     }
                     else{
                         console.log("YAGI..." + "Funcionalidad de localizacion no soportada");
@@ -176,26 +130,11 @@
     
                     }
                     
-                    $("#reload-position").on("click",function (){
-                        /*
-                        console.log("YAGI..." + "CLICK BUTTON");
-                        var temperatura = $("#temperature").text();
-                        var grado = $("#measure").text();
-                        console.log("YAGI..." + temperatura);
-                        console.log("YAGI..." + grado);
-                        $("#temperature").html(calcularTemperatura(temperatura,grado));
-                        $("#measure").text((grado == "C" ? "F" : "C"));
-                        */
+                    $("#reload-position").on("click",function (){                        
                         $("#weather-info").text("");
                         $("#weather-info").text("Loading...");
                         navigator.geolocation.getCurrentPosition(onSuccessGetLocation,onErrorGetLocation,localizacionConfigObj);
                     });
-
-                    function obtenerPosicion(){
-                        $("#weather-info").text("");
-                        $("#weather-info").text("Loading...");
-                        navigator.geolocation.getCurrentPosition(onSuccessGetLocation,onErrorGetLocation,localizacionConfigObj);
-                    }
                 });
                 
             });
