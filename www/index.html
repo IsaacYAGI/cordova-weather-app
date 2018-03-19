@@ -62,6 +62,9 @@
                 <h4 id="weather-info" class="text-center">
                     
                 </h4>
+                <p class="text-center">
+                    <button id="change-measure" class="btn btn-primary text-center" disabled>Change measure</button>
+                </p>
             </div>
         </div>
         <div class="row">
@@ -95,11 +98,13 @@
                             var temperatura = data.main.temp;
                             var estado_clima = data.weather[0].description;
                             var img_clima = data.weather[0].icon;
-                            $("#weather-info").append("<h4>" +  lugar + ", " + pais + "<br>");
-                            $("#weather-info").append(temperatura + "C " + "<br>");
+                            $("#weather-info").append(lugar + ", " + pais + "<br>");
+                            $("#weather-info").append("<span id=\"temperature\">" + temperatura + "</span> <span id=\"measure\"> C </span> " + "<br>");
                             $("#weather-info").append(estado_clima + "<br>");
                             $("#weather-info").append("<img src= \""+img_clima+"\" />");
-                            $("#weather-info").append("</h4>");  
+                            $("#weather-info").append("<br>");
+                            $('#change-measure').attr("disabled", false);
+                            //$("#weather-info").append("<button id=\"change-measure\" class=\"btn btn-primary\">Change measure</button>");  
                         })
                         .fail(function(error){
                             console.log("Servicio no respondio.");
@@ -131,7 +136,27 @@
                    $("#weather-info").append("<h4>Función de localización no soportada</h4>");
                 }
                 //alert("Prueba ready");
+                $("#change-measure").on("click",function (){
+                    console.log("CLICK BUTTON");
+                    var temperatura = $("#temperature").text();
+                    var grado = $("#measure").text();
+                    console.log(temperatura);
+                    console.log(grado);
+                    $("#temperature").html(calcularTemperatura(temperatura,grado));
+                    $("#measure").text((grado == "C" ? "F" : "C"));
+                });
             });
+
+            function calcularTemperatura(temp,measure){
+                switch(measure){
+                    case "F":
+                        return (temp * (9/5) + 32).toFixed(2);
+                        //break;
+                    case "C":
+                        return ((temp - 32) * (5/9)).toFixed(2)
+                        //break;
+                }
+            }
         </script>
         
     </body>
