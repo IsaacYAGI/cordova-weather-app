@@ -28,22 +28,111 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">-->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/bs/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/bs/css/bootstrap-theme.css">
         <title>Hello World</title>
     </head>
     <body>
+        <!--
         <div class="app">
             <h1>Apache Cordova</h1>
             <div id="deviceready" class="blink">
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
             </div>
+            <div><button class="btn btn-warning">Prueba</button></div>
         </div>
+    -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">
+                    Free Code Camp Weather App
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4 id="weather-info" class="text-center">
+                    
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">
+                    Developed by <a href="https://github.com/isaacYAGI" target="_blank">IsaacYAGI</a> 
+                </h4>
+            </div>
+        </div>
+    </div>
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="css/bs/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+
+        <script>
+            $(document).ready(function(){
+                if (navigator.geolocation){
+                    //alert("Soporto geolocalizacion");
+                    
+                    navigator.geolocation.getCurrentPosition(function(position){
+                        //success 
+                        console.log("Success position" + JSON.stringify(position));
+                        var lon = position.coords.longitude;
+                        var lat = position.coords.latitude;
+                        //console.log("Success position" + JSON.stringify(lon) + "+" + JSON.stringify(lat));
+                        $.get( "https://fcc-weather-api.glitch.me/api/current", { "lat": lat, "lon": lon }, function(data){
+                            console.log(JSON.stringify(data));
+                            var lugar = data.name;
+                            var pais = data.sys.country;
+                            var temperatura = data.main.temp;
+                            var estado_clima = data.weather[0].description;
+                            var img_clima = data.weather[0].icon;
+                            $("#weather-info").append("<h4>" +  lugar + ", " + pais + "<br>");
+                            $("#weather-info").append(temperatura + "C " + "<br>");
+                            $("#weather-info").append(estado_clima + "<br>");
+                            $("#weather-info").append("<img src= \""+img_clima+"\" />");
+                            $("#weather-info").append("</h4>");  
+                        })
+                        .fail(function(error){
+                            console.log("Servicio no respondio.");
+                        });
+                    }, function(positionError){
+                        //error
+                        console.log("Error position" + JSON.stringify(positionError));
+                        switch (positionError.code){
+                            case positionError.PERMISSION_DENIED:
+                                $("#weather-info").append("<h4>No se ha permitido el acceso a la posición del usuario.</h4>");
+                            break;
+                            case positionError.POSITION_UNAVAILABLE:
+                                $("#weather-info").append("<h4>No se ha podido acceder a la información de su posición.</h4>");
+                            break;
+                            case positionError.TIMEOUT:
+                                $("#weather-info").append("<h4>El servicio ha tardado demasiado tiempo en responder.</h4>");
+                            break;
+                            default:
+                                $("#weather-info").append("<h4>Error desconocido.</h4>");
+                        }
+
+                    });
+
+                    //console.log(JSON.stringify(localizacion));
+
+                }
+                else{
+                   //alert("No soporto geolocalizacion");
+                   $("#weather-info").append("<h4>Función de localización no soportada</h4>");
+                }
+                //alert("Prueba ready");
+            });
+        </script>
+        
     </body>
 </html>
